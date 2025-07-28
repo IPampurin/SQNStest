@@ -14,7 +14,6 @@ func main() {
 	err = godotenv.Load()
 	if err != nil {
 		fmt.Printf("ошибка загрузки .env файла: %v\n", err)
-		return
 	}
 
 	err = server.Run()
