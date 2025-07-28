@@ -13,10 +13,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var Port = 80
-
 func getURL(path string) string {
-	port := Port
+	port := 80
 	envPort := os.Getenv("SQNStest_PORT")
 	if len(envPort) > 0 {
 		if eport, err := strconv.ParseInt(envPort, 10, 32); err == nil {
