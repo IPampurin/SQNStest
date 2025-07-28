@@ -35,4 +35,4 @@ jobs:
       run: |
         CGO_ENABLED=0 GOOS=linux go run main.go &
         sleep 100
-        go test -run ^TestServer$ ./tests
+        go test ./tests
