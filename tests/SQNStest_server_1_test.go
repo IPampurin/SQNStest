@@ -15,7 +15,7 @@ import (
 
 // получаем URL для тестирования
 func getURL(path string) string {
-	port := 80
+	port := 8080
 	envPort := os.Getenv("SQNStest_PORT")
 	if len(envPort) > 0 {
 		if eport, err := strconv.ParseInt(envPort, 10, 32); err == nil {
