@@ -34,5 +34,5 @@ jobs:
     - name: Run local server
       run: |
         CGO_ENABLED=0 GOOS=linux go run main.go &
-        sleep 10
+        sleep 100
         go test -run ^TestServer$ ./tests
