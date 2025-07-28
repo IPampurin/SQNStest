@@ -1,0 +1,54 @@
+.header {
+    height: 60px;
+    width: 100%;
+}
+.header--info {
+    margin: 24px 120px;
+    display: flex;
+}
+.header .logo {
+    text-transform: uppercase;
+    line-height: 36px;
+    font-size: 28px;
+    font-family: ProximaNovaSemibold;
+    font-weight: 700;
+}
+.header--info .right-block {
+    margin: 3px 0 3px auto;
+    display: flex;
+    gap: 32px;
+}
+.header--info .button.primary {
+    display: flex;
+}
+.header--info .button .add--icon {
+    width: 24px;
+    height: 24px;
+}
+.header--info .button .add--text {
+    margin-top: 3px;
+    font-size: 14px;
+}
+.person {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+span.person--icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #1540A0;
+    padding: 6px 7px 8px 7px;
+}
+.login {
+    width: 40px;
+    border-radius: 2px;
+    border: 1px solid #1540A0;
+    color: #1540A0;
+    line-height: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 5px 16px;
+}

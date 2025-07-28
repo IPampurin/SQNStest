@@ -1,0 +1,38 @@
+.profile {
+    background-color: #FFF;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.profile .my-profile {
+    display: flex;
+    gap: 24px;
+}
+.profile .my-profile .photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    background: #D9D9D9;
+}
+.profile .my-profile .info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.profile .my-profile .info .info--nickname {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+}
+.profile .my-profile .info .info--update-photo {
+    margin-top: auto;
+    color: var(--blue-blue, #1540A0);
+}
+.profile .update-data {
+    margin: 24px 0;
+    display: flex;
+    gap: 60px;
+}
+.profile .update-data .fields {
+    width: 400px;
+}

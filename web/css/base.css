@@ -1,0 +1,180 @@
+body {
+    margin: 0;
+    background-color: #F2F2F2;
+}
+.content {
+    padding: 32px 120px;
+    min-height: calc(100vh - 304px)
+}
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    margin-bottom: 24px;
+}
+.paragraph {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+}
+.no-display {
+    display: none !important;
+}
+.text-right {
+    text-align: right;
+}
+.pointer {
+    cursor: pointer;
+}
+
+.person-popup {
+    position: absolute;
+    right: 120px;
+    top: 62px;
+}
+.person-popup .arrow {
+    margin-right: 16px;
+    float: right;
+}
+.person-popup .person-popup--items {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
+    background-color: #FFFFFF;
+    margin-top: 7px;
+}
+.person-popup .person-popup--items .item {
+    padding: 12px 16px;
+    height: 24px;
+    display: flex;
+    gap: 8px;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
+    align-items: end;
+}
+.person-popup .person-popup--items .hr {
+    border-top: 1px solid var(--black-black-02, #D1D1D1);
+}
+
+.buttons {
+    display: flex;
+    gap: 24px;
+}
+.button {
+    padding: 5px 16px;
+    line-height: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid #1540A0;
+    color: #1540A0;
+    width: max-content;
+    height: 20px;
+}
+.button.primary {
+    background: var(--orange-orange-10, #E98A0B);
+    color: #FFFFFF;
+    border: 0;
+    height: 22px;
+}
+
+h2 {
+    margin: 0 0 24px 0;
+}
+input:focus-visible {
+    outline: 0;
+}
+
+.field:not(:last-child) {
+    margin-bottom: 24px;
+}
+.field .field--label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    line-height: 16px;
+}
+.field .field--data {
+    width: calc(100% - 2px);
+    border-radius: 2px;
+    border: 1px solid var(--black-black-03, #BABABA);
+    background: var(--black-black-0, #FFF);
+    height: 32px;
+}
+.field .field--data input {
+    border: 0;
+    width: calc(100% - 16px);
+    height: calc(100% - 14px);
+    padding: 7px 8px;
+}
+input:focus-visible, textarea:focus-visible {
+    outline: 0;
+}
+.field .field--data.with-image {
+    position: relative;
+}
+
+.field {
+    color: var(--black-black-06, #747474);
+}
+.field span.private {
+    width: 28px;
+    height: 28px;
+    position: absolute;
+    right: 8px;
+    top: 1px;
+    cursor: pointer;
+    background-image: url(../image/mdi_eye-off-outline.svg);
+}
+.field span.private.private-off {
+    background-image: url(../image/eye-open.png);
+}
+
+
+.add-comment {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.30);
+}
+.add-comment .comment-form {
+    margin: 60px calc(50% - 500px);
+    width: 1000px;
+    background: #FFF;
+}
+.popup--title {
+    padding: 14px 32px;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    background: var(--black-black-005, #F2F2F2);
+    display: flex;
+}
+.popup--title .close {
+    margin-left: auto;
+}
+.comment--info {
+    padding: 24px;
+}
+.field textarea.field--data {
+    height: 390px;
+    padding: 5px 12px;
+    width: calc(100% - 26px);
+}
+.comment--footer {
+    background: var(--black-black-005, #F2F2F2);
+    padding: 16px 32px;
+    justify-content: flex-end;
+}
+.field--radio {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 16px;
+}
+
+.field--radio input[type='radio'] {
+    margin: 0 16px 0 0;
+}

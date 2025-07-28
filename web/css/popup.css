@@ -1,0 +1,50 @@
+.popup {
+    width: 480px;
+    margin: 60px calc(50% - 240px);
+    border-radius: 4px;
+    background: var(--black-black-0, #FFF);
+}
+.popup .popup--tabs {
+    display: flex;
+    gap: 24px;
+    padding: 24px 24px 0 24px;
+    border-bottom: 1px solid var(--black-black-02, #D1D1D1);
+}
+.popup .popup--tabs .tab {
+    color: #A2A2A2;
+    line-height: 32px;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 0 8px 16px 8px;
+}
+.popup .popup--tabs .tab.active {
+    color: #030303;
+    border-bottom: 1px solid var(--black-black-10, #030303);
+}
+.popup .popup--fields {
+    padding: 24px;
+}
+.popup .popup--fields .field a {
+    color: #E98A0B;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+}
+.popup--background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #46464661;
+}
+.popup .popup--info {
+    padding: 24px;
+    border-bottom: 1px solid var(--black-black-02, #D1D1D1);
+    line-height: 20px;
+}
+
+.popup .popup--info h2 {
+    line-height: 32px;
+    margin: 0 0 8px 0;
+}

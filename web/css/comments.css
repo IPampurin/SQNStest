@@ -1,0 +1,162 @@
+.filters {
+    margin-bottom: 24px;
+}
+.filters .search {
+    border-radius: 2px;
+    border: 1px solid var(--black-black-03, #BABABA);
+    background: var(--black-black-0, #FFF);
+    height: 30px;
+    width: 400px;
+    display: flex;
+    margin-bottom: 24px;
+}
+.filters .search img {
+    width: 10px;
+    height: 10px;
+    margin: 10px;
+}
+.filters .search input {
+    border: 0;
+    width: 100%;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.filters .field {
+    display: flex;
+}
+.filters .field .sort {
+    display: flex;
+    gap: 24px;
+    color: black;
+}
+.filters .field .all-count {
+    margin-left: auto;
+}
+
+.comment {
+    background-color: #FFF;
+    padding: 24px;
+}
+.comment:not(:last-child) {
+    margin-bottom: 24px;
+}
+
+.content.with-pagination {
+    min-height: calc(100vh - 377px);
+}
+
+.pagination {
+    padding: 24px 120px;
+    display: flex;
+    background-color: #FFF;
+}
+.pagination pages {
+    display: flex;
+    gap: 8px;
+}
+.pagination pages page {
+    width: 23px;
+    height: 23px;
+    display: inline-block;
+    border-radius: 1.5px;
+    text-align: center;
+    line-height: 23px;
+    font-size: 12px;
+    cursor: pointer;
+}
+.pagination pages img {
+    cursor: pointer;
+}
+.pagination pages page.active {
+    border: 1px solid var(--blue-blue, #1540A0);
+    color: var(--blue-blue, #1540A0);
+    cursor: default;
+}
+.pagination pages page.no-active {
+    cursor: default;
+}
+.pagination pages img.last {
+    transform: rotate(180deg);
+}
+.pagination counts {
+    margin-left: auto;
+    color: var(--black-black-06, #747474);
+    display: flex;
+    gap: 8px;
+    line-height: 25px;
+}
+.pagination counts count {
+    cursor: pointer;
+}
+.pagination counts count.active {
+    color: var(--blue-blue, #1540A0);
+    cursor: default;
+}
+.comment .person {
+    padding-bottom: 8px;
+    border-bottom: 1px solid #D1D1D1;
+    width: max-content;
+    min-width: 75px;
+}
+.comment .date {
+    margin: 8px 0 24px 0;
+}
+.comment .comment--title {
+    margin-bottom: 8px;
+    line-height: 32px;
+    font-size: 24px;
+    font-weight: 600;
+}
+.comment .comment--data {
+    margin-bottom: 18px;
+    line-height: 20px;
+    font-weight: 400;
+}
+.comment .button.with-image {
+    display: flex;
+    gap: 8px;
+}
+
+.popup-comment .comment--info {
+    max-height: calc(100vh - 295px);
+    overflow-y: auto;
+}
+.popup-comment .comment--title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    margin: 24px 0 8px 0;
+}
+.popup-comment .comment--data {
+    margin-bottom: 24px;
+}
+.popup-comment .recommend {
+    border-radius: 8px;
+    border: 1px solid var(--green-green-10, #70D63A);
+    display: flex;
+    gap: 16px;
+    padding: 8px 16px;
+    width: max-content;
+}
+.popup-comment .recommend .nickname {
+    color: var(--black-black-06, #747474);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+}
+.popup-comment .recommend .status {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 24px;
+}
+.popup-comment .recommend.no-recommend {
+    border: 1px solid var(--green-green-10, #ff0000);
+}
+.popup-comment .recommend.no-recommend img {
+    transform: rotateX(180deg);
+}
+
+.down img {
+    transform: rotate(180deg);
+}

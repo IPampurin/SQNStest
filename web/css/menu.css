@@ -1,0 +1,17 @@
+.menu {
+    width: clac(100% - 240px);
+    height: 36px;
+    background-color: #283151;
+    display: flex;
+    padding: 10px 120px;
+}
+.menu .menu--item {
+    padding: 8px 16px;
+    color: #FFF;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+}
+.menu .menu--item.active {
+    background-color: #667EEC;
+}

@@ -1,0 +1,16 @@
+.footer {
+    width: calc(100% - 240px);
+    height: 20px;
+    padding: 40px 120px;
+    display: inline-flex;
+    background: var(--black-black-08, #464646);
+    color: #F2F2F2;
+}
+.footer .left-block {
+    height: 20px;
+}
+.footer .center {
+    display: flex;
+    gap: 24px;
+    margin: 0 auto;
+}
