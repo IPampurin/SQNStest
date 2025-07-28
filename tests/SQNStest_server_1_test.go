@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// получаем URL для тестирования
 func getURL(path string) string {
 	port := 80
 	envPort := os.Getenv("SQNStest_PORT")
@@ -25,16 +26,23 @@ func getURL(path string) string {
 	return fmt.Sprintf("http://localhost:%d/%s", port, path)
 }
 
+// получаем тело ответа от сервера
 func getBody(path string) ([]byte, error) {
 	resp, err := http.Get(getURL(path))
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	return body, err
+
+	// проверяем статус ответа
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("неверный статус ответа: %d", resp.StatusCode)
+	}
+
+	return io.ReadAll(resp.Body)
 }
 
+// рекурсивно обходим директорию
 func walkDir(path string, f func(fname string) error) error {
 	dirs, err := os.ReadDir(path)
 	if err != nil {
@@ -55,18 +63,33 @@ func walkDir(path string, f func(fname string) error) error {
 	return nil
 }
 
+// основной тест сервера
 func TestServer(t *testing.T) {
+	// функция сравнения файлов
 	cmp := func(fname string) error {
+		// читаем файл с диска
 		fbody, err := os.ReadFile(fname)
 		if err != nil {
-			return err
+			return fmt.Errorf("ошибка чтения файла %s: %w", fname, err)
 		}
+
+		// получаем данные с сервера
 		body, err := getBody(fname)
 		if err != nil {
-			return err
+			return fmt.Errorf("ошибка получения данных с сервера для %s: %w", fname, err)
 		}
-		assert.Equal(t, len(fbody), len(body), `сервер возвращает для %s данные другого размера`, fname)
+
+		// проверяем только размер файла
+		assert.Equal(t, len(fbody), len(body),
+			fmt.Sprintf("сервер возвращает для %s данные другого размера", fname))
+
 		return nil
 	}
-	assert.NoError(t, walkDir("../web", cmp))
+
+	// запускаем проверку всех файлов
+	assert.NoError(t, walkDir("../web", cmp), "ошибка при проверке файлов")
+
+	// проверяем корневую директорию
+	_, err := getBody("/")
+	assert.NoError(t, err, "ошибка при запросе корневой директории")
 }
