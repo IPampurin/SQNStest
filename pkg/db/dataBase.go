@@ -55,7 +55,7 @@ func InitDB() error {
 	// создаём подключение к базе данных с учётом параметров из .env
 	dbHost, ok := os.LookupEnv("SQNStest_DB_Host_PORT")
 	if !ok {
-		dbHost = "3306"
+		dbHost = "localhost:3306"
 	}
 	dbUser, ok := os.LookupEnv("SQNStest_MYSQL_USER")
 	if !ok {
