@@ -20,11 +20,11 @@ jobs:
       mysql:
         image: mysql:8.0.43
         env:
-          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_ROOT_PASSWORD: rootpassword123
           MYSQL_DATABASE: SQNS_DB
           MYSQL_USER: SQNS_User
           MYSQL_PASSWORD: 123
-          MYSQL_TZ: system 
+          MYSQL_TZ: system
           MYSQL_INITDB_SKIP_TEST_DATA: "yes"
         ports:
           - 3306:3306
@@ -45,14 +45,14 @@ jobs:
 
       - name: Wait for MySQL to start
         run: |
-          max_attempts=120 # Увеличено время ожидания
+          max_attempts=120
           attempt=0
           until nc -z services.mysql.port-3306 3306 || $attempt -eq $max_attempts ; do
             echo "Waiting for MySQL to start... (attempt $attempt)"
             sleep 5
             attempt=$((attempt + 1))
           done
-          if $attempt -eq $max_attempts ; then
+          if [ $attempt -eq $max_attempts ]; then
             echo "MySQL failed to start after 600 seconds"
             exit 1
           fi
@@ -60,20 +60,23 @@ jobs:
       - name: Verify MySQL connection
         run: |
           mysql -h services.mysql.port-3306 -uroot -prootpassword123 -e "SHOW DATABASES;"
+          mysql -h services.mysql.port-3306 -uSQNS_User -p123 -e "SHOW DATABASES;"
 
       - name: Set environment variables
         run: |
           echo "SQNStest_MYSQL_ROOT_PASSWORD=rootpassword123" >> $GITHUB_ENV
           echo "SQNStest_DB_HOST_PORT=services.mysql.port-3306" >> $GITHUB_ENV
+          echo "SQNStest_MYSQL_USER=SQNS_User" >> $GITHUB_ENV
+          echo "SQNStest_MYSQL_PASSWORD=123" >> $GITHUB_ENV
 
       - name: Run local server
         run: |
           CGO_ENABLED=0 GOOS=linux go run main.go &
           sleep 50
-          go test -run ^TestServer$./tests
+          go test -run ^TestServer$ ./tests
 
       - name: Run database tests
         run: |
-          go test -run ^TestInitDB$./tests
-          go test -run ^TestCheckTableExists$./tests
-          go test -run ^TestIndexes$./tests
+          go test -run ^TestInitDB$ ./tests
+          go test -run ^TestCheckTableExists$ ./tests
+          go test -run ^TestIndexes$ ./tests
