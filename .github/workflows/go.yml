@@ -1,10 +1,12 @@
-name: Go
+name: Go with MySQL 9.4.0
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
   pull_request:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   build:
@@ -12,16 +14,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go-version: ["1.24.x"]
+        go-version: [1.24.x]
 
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:9.4.0 # Используем указанную версию
         env:
           MYSQL_ROOT_PASSWORD: rootpassword
           MYSQL_DATABASE: SQNS_DB
           MYSQL_USER: SQNS_User
           MYSQL_PASSWORD: 123
+          MYSQL_TZ: system # Для корректной работы с часовыми поясами
         ports:
           - 3306:3306
 
@@ -41,9 +44,17 @@ jobs:
 
       - name: Wait for MySQL to start
         run: |
-          until nc -z services.mysql.port-3306 3306; do
-            sleep 1
+          max_attempts=60
+          attempt=0
+          until nc -z services.mysql.port-3306 3306 || $attempt -eq $max_attempts ; do
+            echo "Waiting for MySQL to start... (attempt $attempt)"
+            sleep 5
+            attempt=$((attempt + 1))
           done
+          if $attempt -eq $max_attempts ; then
+            echo "MySQL failed to start after 300 seconds"
+            exit 1
+          fi
 
       - name: Set environment variables
         run: |
@@ -54,10 +65,10 @@ jobs:
         run: |
           CGO_ENABLED=0 GOOS=linux go run main.go &
           sleep 50
-          go test -run ^TestServer$ ./tests
+          go test -run ^TestServer$./tests
 
       - name: Run database tests
         run: |
-          go test -run ^TestInitDB$ ./tests
-          go test -run ^TestCheckTableExists$ ./tests
-          go test -run ^TestIndexes$ ./tests
+          go test -run ^TestInitDB$./tests
+          go test -run ^TestCheckTableExists$./tests
+          go test -run ^TestIndexes$./tests
