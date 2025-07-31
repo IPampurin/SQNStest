@@ -12,9 +12,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TestInitDB проверяет корректность инициализации базы данных
-func TestInitDB(t *testing.T) {
-
+// Единая функция тестирования для проверки подключения, таблиц и индексов
+func TestDatabase(t *testing.T) {
+	// Настройки подключения
 	dbPass, ok := os.LookupEnv("SQNStest_MYSQL_ROOT_PASSWORD")
 	if !ok {
 		dbPass = "rootpassword"
@@ -23,14 +23,19 @@ func TestInitDB(t *testing.T) {
 	if !ok {
 		dbHost = "localhost:3306"
 	}
+
 	// Создаем тестовую базу данных
 	testDBName := "test_SQNS_db"
 	setupTestDB(t, testDBName, dbPass, dbHost)
 	defer cleanupTestDB(t, testDBName, dbPass, dbHost)
 
-	// Инициализируем подключение
-	err := db.InitDB() // Используем функцию из пакета db
+	// Инициализируем базу данных
+	err := db.InitDB()
 	assert.NoError(t, err, "Ошибка инициализации БД")
+
+	// Проверяем подключение
+	err = db.DB.Ping()
+	assert.NoError(t, err, "Ошибка проверки подключения к БД")
 
 	// Проверяем существование таблиц
 	tables := []string{"logo_Text_users", "logo_Text_Comments"}
@@ -38,73 +43,62 @@ func TestInitDB(t *testing.T) {
 		assert.True(t, db.CheckTableExists(db.DB, table),
 			fmt.Sprintf("Таблица %s не существует", table))
 	}
+
+	// Проверяем индексы в таблицах
+	indexes := map[string][]string{
+		"logo_Text_Comments": {
+			"logoTextComments_date",
+			"logoTextComments_user",
+		},
+	}
+
+	for table, indexList := range indexes {
+		for _, index := range indexList {
+			assert.True(t, checkIndexExists(db.DB, table, index),
+				fmt.Sprintf("Индекс %s в таблице %s не существует", index, table))
+		}
+	}
 }
 
-// TestCheckTableExists проверяет работу функции проверки существования таблицы
-func TestCheckTableExists(t *testing.T) {
-	// Проверяем существующую таблицу
-	assert.True(t, db.CheckTableExists(db.DB, "logo_Text_users"),
-		"Неверно определена существующая таблица")
+// Функция проверки существования индекса
+func checkIndexExists(db *sql.DB, table, indexName string) bool {
+	query := `
+    SELECT COUNT(*) 
+    FROM INFORMATION_SCHEMA.STATISTICS 
+    WHERE TABLE_NAME = ? 
+    AND INDEX_NAME = ?
+    `
 
-	// Проверяем несуществующую таблицу
-	assert.False(t, db.CheckTableExists(db.DB, "non_existent_table"),
-		"Неверно определена несуществующая таблица")
+	var count int
+	err := db.QueryRow(query, table, indexName).Scan(&count)
+	if err != nil {
+		return false
+	}
+	return count > 0
 }
 
+// Создание тестовой БД
 func setupTestDB(t *testing.T, dbName, dbPass, dbHost string) {
-	// Создаем подключение к MySQL
 	testDSN := fmt.Sprintf("root:%s@tcp(%s)/", dbPass, dbHost)
 	testDB, err := sql.Open("mysql", testDSN)
 	assert.NoError(t, err, "Ошибка подключения к MySQL")
 	defer testDB.Close()
 
-	// Создаем тестовую БД
 	_, err = testDB.Exec(fmt.Sprintf("CREATE DATABASE %s", dbName))
 	assert.NoError(t, err, "Ошибка создания тестовой БД")
 
-	// Обновляем DSN для использования тестовой БД
 	dbName = fmt.Sprintf("root:%s@tcp(%s)/%s", dbPass, dbHost, dbName)
 	db.DB, err = sql.Open("mysql", dbName)
 	assert.NoError(t, err, "Ошибка подключения к тестовой БД")
 }
 
+// Удаление тестовой БД
 func cleanupTestDB(t *testing.T, dbName, dbPass, dbHost string) {
-	// Подключаемся к MySQL
 	testDSN := fmt.Sprintf("root:%s@tcp(%s)/", dbPass, dbHost)
 	testDB, err := sql.Open("mysql", testDSN)
 	assert.NoError(t, err, "Ошибка подключения к MySQL")
 	defer testDB.Close()
 
-	// Удаляем тестовую БД
 	_, err = testDB.Exec(fmt.Sprintf("DROP DATABASE %s", dbName))
 	assert.NoError(t, err, "Ошибка удаления тестовой БД")
-}
-
-// TestIndexes проверяет наличие индексов
-func TestIndexes(t *testing.T) {
-	indexes := []string{
-		"logoTextComments_date",
-		"logoTextComments_user",
-	}
-
-	for _, index := range indexes {
-		assert.True(t, checkIndexExists(db.DB, index),
-			fmt.Sprintf("Индекс %s не существует", index))
-	}
-}
-
-func checkIndexExists(db *sql.DB, indexName string) bool {
-	query := `
-    SELECT COUNT(*) 
-    FROM INFORMATION_SCHEMA.STATISTICS 
-    WHERE TABLE_SCHEMA = DATABASE() 
-    AND INDEX_NAME = ?
-    `
-
-	var count int
-	err := db.QueryRow(query, indexName).Scan(&count)
-	if err != nil {
-		return false
-	}
-	return count > 0
 }

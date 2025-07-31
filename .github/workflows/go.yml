@@ -53,6 +53,6 @@ jobs:
         sleep 50
         go test -run ^TestServer$ ./tests
 
-    - name: Run database tests
+    - name: Run database
       run: |
-        go test -run ^TestInitDB$ ./tests
+        go test -run ^TestDatabase$ ./tests
