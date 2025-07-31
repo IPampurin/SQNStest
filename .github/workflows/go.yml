@@ -1,12 +1,10 @@
-name: Go with MySQL 8.0.43
+name: Go with MySQL
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -18,65 +16,46 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.0.43
+        image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: rootpassword123
+          MYSQL_ROOT_PASSWORD: rootpassword
           MYSQL_DATABASE: SQNS_DB
           MYSQL_USER: SQNS_User
           MYSQL_PASSWORD: 123
-          MYSQL_TZ: system
-          MYSQL_INITDB_SKIP_TEST_DATA: "yes"
+          MYSQL_PORT: 3306
         ports:
           - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.24.x'
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ matrix.go-version }}
 
-      - name: Display Go version
-        run: go version
+    - name: Display Go version
+      run: go version
 
-      - name: Install dependencies
-        run: go mod tidy
+    - name: Install dependencies
+      run: go mod tidy
 
-      - name: Wait for MySQL to start
-        run: |
-          max_attempts=120
-          attempt=0
-          until nc -z services.mysql.port-3306 3306 || $attempt -eq $max_attempts ; do
-            echo "Waiting for MySQL to start... (attempt $attempt)"
-            sleep 5
-            attempt=$((attempt + 1))
-          done
-          if [ $attempt -eq $max_attempts ]; then
-            echo "MySQL failed to start after 600 seconds"
-            exit 1
-          fi
+    - name: Wait for MySQL to start
+      run: |
+        until mysqladmin ping -h 127.0.0.1 -P3306 -uroot -prootpassword &> /dev/null; do
+          echo "Waiting for MySQL to start..."
+          sleep 1
+        done
 
-      - name: Verify MySQL connection
-        run: |
-          mysql -h services.mysql.port-3306 -uroot -prootpassword123 -e "SHOW DATABASES;"
-          mysql -h services.mysql.port-3306 -uSQNS_User -p123 -e "SHOW DATABASES;"
+    - name: Run local server
+      run: |
+        CGO_ENABLED=0 GOOS=linux go run main.go &
+        sleep 50
+        go test -run ^TestServer$ ./tests
 
-      - name: Set environment variables
-        run: |
-          echo "SQNStest_MYSQL_ROOT_PASSWORD=rootpassword123" >> $GITHUB_ENV
-          echo "SQNStest_DB_HOST_PORT=services.mysql.port-3306" >> $GITHUB_ENV
-          echo "SQNStest_MYSQL_USER=SQNS_User" >> $GITHUB_ENV
-          echo "SQNStest_MYSQL_PASSWORD=123" >> $GITHUB_ENV
-
-      - name: Run local server
-        run: |
-          CGO_ENABLED=0 GOOS=linux go run main.go &
-          sleep 50
-          go test -run ^TestServer$ ./tests
-
-      - name: Run database tests
-        run: |
-          go test -run ^TestInitDB$ ./tests
-          go test -run ^TestCheckTableExists$ ./tests
-          go test -run ^TestIndexes$ ./tests
+    - name: Run database tests
+      run: |
+        go test -run ^TestInitDB$ ./tests
+        go test -run ^TestCheckTableExists$ ./tests
+        go test -run ^TestIndexes$ ./tests
