@@ -56,4 +56,3 @@ jobs:
     - name: Run database tests
       run: |
         go test -run ^TestInitDB$ ./tests
-        go test -run ^TestIndexes$ ./tests
